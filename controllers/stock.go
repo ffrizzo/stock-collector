@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"net/http"
 
-	"github.com/ffrizzo/stock-colector/models"
-	"github.com/ffrizzo/stock-colector/utils"
+	"github.com/ffrizzo/stock-collector/models"
+	"github.com/ffrizzo/stock-collector/utils"
 	"github.com/gin-gonic/gin"
 )
 

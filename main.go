@@ -7,8 +7,8 @@ import (
 
 	"fmt"
 
-	"github.com/ffrizzo/stock-colector/controllers"
-	"github.com/ffrizzo/stock-colector/handlers"
+	"github.com/ffrizzo/stock-collector/controllers"
+	"github.com/ffrizzo/stock-collector/handlers"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )

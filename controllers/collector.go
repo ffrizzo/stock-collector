@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/ffrizzo/stock-colector/models"
+	"github.com/ffrizzo/stock-collector/models"
 	"github.com/gin-gonic/gin"
 )
 

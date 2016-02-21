@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/ffrizzo/stock-colector/utils"
+	"github.com/ffrizzo/stock-collector/utils"
 	"github.com/gin-gonic/gin"
 )
 
