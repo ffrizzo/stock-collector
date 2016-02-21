@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"strings"
 
 	_ "github.com/lib/pq"
 
@@ -78,7 +79,6 @@ func main() {
 		v1.GET("/collector/stock/mean_media", sc.StockMeanMedian)
 	}
 
-	// port := []string{":", viper.GetString("server.port")}
-	// g.Run(strings.Join(port, ""))
-	g.Run()
+	port := []string{":", viper.GetString("server.port")}
+	g.Run(strings.Join(port, ""))
 }

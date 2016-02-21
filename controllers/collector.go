@@ -49,7 +49,7 @@ func (controller CollectorController) Collector(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": true, "stock": stock})
 }
 
-//SaveStock save or update data for Stock
+//SaveStock save data for stock
 func SaveStock(tx *sql.Tx, collector models.Stock) (models.Stock, error) {
 	query := `insert into stock (sell, rate, buy, ticker, account, username, time)
         values ($1, $2, $3, $4, $5, $6, $7) RETURNING id`
