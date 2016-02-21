@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 
 	"github.com/ffrizzo/stock-collector/models"
@@ -21,7 +22,9 @@ func NewStockController(db *sql.DB) *StockController {
 
 //StockMostExpensive get the most expensive stock for each account
 func (controller StockController) StockMostExpensive(c *gin.Context) {
-	startTime, endTime := util.GetStartEndTimeOfYesterday()
+	startTime, endTime := util.GetStartAndEndTimeOfYesterday()
+	fmt.Println(startTime)
+	fmt.Println(endTime)
 
 	query := `select id, sell, rate, buy, ticker, account, username, time from stock
         where buy in (select max(buy) as max_buy from stock
@@ -53,7 +56,7 @@ func (controller StockController) StockMeanMedian(c *gin.Context) {
 	startTime := c.Query("startTime")
 	endTime := c.Query("endTime")
 
-	query := `sselect median(sell) sell_media, median(rate) rate_media, median(buy) buy_median,
+	query := `select median(sell) sell_media, median(rate) rate_media, median(buy) buy_median,
               avg(sell) sell_avg, avg(rate) rate_avg, avg(buy) buy_avg from stock
               where time between $1 and $2
               and account = $3

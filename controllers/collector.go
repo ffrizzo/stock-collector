@@ -51,8 +51,6 @@ func (controller CollectorController) Collector(c *gin.Context) {
 
 //SaveStock save or update data for Stock
 func SaveStock(tx *sql.Tx, collector models.Stock) (models.Stock, error) {
-	stock := models.Stock{}
-
 	query := `insert into stock (sell, rate, buy, ticker, account, username, time)
         values ($1, $2, $3, $4, $5, $6, $7) RETURNING id`
 
@@ -63,7 +61,7 @@ func SaveStock(tx *sql.Tx, collector models.Stock) (models.Stock, error) {
 		return models.Stock{}, err
 	}
 
-	stock = models.Stock{stockID, collector.Sell, collector.Rate, collector.Buy, collector.Ticker,
+	stock := models.Stock{stockID, collector.Sell, collector.Rate, collector.Buy, collector.Ticker,
 		collector.Account, collector.User, collector.Time}
 
 	return stock, nil

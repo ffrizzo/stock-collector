@@ -19,11 +19,11 @@ func NewUserController(db *sql.DB) *UserController {
 	return &UserController{db}
 }
 
-//UserMostActive get the most active user on last hour
+//UserMostActive get the user most active on the last hour
 func (controller UserController) UserMostActive(c *gin.Context) {
 
-	startTime := time.Now()
-	endTime := util.SubtractHours(startTime, 1)
+	endTime := time.Now()
+	startTime := util.SubtractHours(endTime, 1)
 
 	query := `select username, count(id) from stock where time between $1 and $2
         group by username order by count desc limit 1`
@@ -31,7 +31,7 @@ func (controller UserController) UserMostActive(c *gin.Context) {
 	var count int
 	err := controller.db.QueryRow(query, startTime, endTime).Scan(&username, &count)
 	if err != nil && err == sql.ErrNoRows {
-		c.JSON(http.StatusBadRequest, gin.H{"success": true, "message": "Does not have user active on the last hour"})
+		c.JSON(http.StatusBadRequest, gin.H{"success": true, "message": "Does not have activity since one hour ago."})
 		return
 	} else if err != nil {
 		panic(err)
