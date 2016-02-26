@@ -32,7 +32,9 @@ func (controller StockController) StockMostExpensive(c *gin.Context) {
                       group by account)`
 	rows, err := controller.db.Query(query, startTime, endTime)
 	if err != nil {
-		panic(err)
+		c.JSON(http.StatusInternalServerError,
+			gin.H{"error": true, "message": fmt.Sprintf("Error to retrieve data  Error: %s", err)})
+		return
 	}
 	defer rows.Close()
 
@@ -45,7 +47,7 @@ func (controller StockController) StockMostExpensive(c *gin.Context) {
 		stocks = append(stocks, stock)
 	}
 
-	c.JSON(http.StatusBadRequest, gin.H{"success": true, "stocks": stocks})
+	c.JSON(http.StatusOK, gin.H{"success": true, "stocks": stocks})
 }
 
 //StockMeanMedian get the meand and median in an interval of dates
@@ -70,10 +72,12 @@ func (controller StockController) StockMeanMedian(c *gin.Context) {
 		Scan(&sellMedia, &rateMedia, &buyMedia, &sellAvg, &rateAvg, &buyAvg)
 
 	if err != nil {
-		panic(err)
+		c.JSON(http.StatusInternalServerError,
+			gin.H{"error": true, "message": fmt.Sprintf("Error to save data for stock. Error: %s", err)})
+		return
 	}
 
-	c.JSON(http.StatusBadRequest, gin.H{"success": true,
+	c.JSON(http.StatusOK, gin.H{"success": true,
 		"stock": gin.H{"ticker": ticker, "account": account,
 			"sell_median": sellMedia, "sell_avg": sellAvg,
 			"rate_median": rateMedia, "rate_avg": rateAvg,

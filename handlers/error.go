@@ -13,7 +13,7 @@ func ErrorHandler() gin.HandlerFunc {
 		defer func() {
 			if err := recover(); err != nil {
 				log.Fatal(err)
-				c.JSON(http.StatusBadRequest, gin.H{"error": true, "message": err})
+				c.JSON(http.StatusInternalServerError, gin.H{"error": true, "message": err})
 			}
 		}()
 

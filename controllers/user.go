@@ -37,5 +37,5 @@ func (controller UserController) UserMostActive(c *gin.Context) {
 		panic(err)
 	}
 
-	c.JSON(http.StatusBadRequest, gin.H{"success": true, "username": username, "total": count})
+	c.JSON(http.StatusOK, gin.H{"success": true, "username": username, "total": count})
 }

@@ -25,32 +25,38 @@ func (controller CollectorController) Collector(c *gin.Context) {
 	c.BindJSON(&collector)
 
 	if collector.Account == "" {
-		panic("Account cannot be null.")
+		c.JSON(http.StatusBadRequest, gin.H{"error": true, "message": "Account cannot be null."})
+		return
 	}
 
 	if collector.User == "" {
-		panic("User cannot be null.")
+		c.JSON(http.StatusBadRequest, gin.H{"error": true, "message": "User cannot be null."})
+		return
 	}
 
 	if collector.Ticker == "" {
-		panic("Ticker cannot be null.")
+		c.JSON(http.StatusBadRequest, gin.H{"error": true, "message": "Ticker cannot be null."})
+		return
 	}
 
 	if collector.Time == nil {
-		panic("Time cannot be null.")
+		c.JSON(http.StatusBadRequest, gin.H{"error": true, "message": "Time cannot be null."})
+		return
 	}
 
 	tx := c.MustGet("tx").(*sql.Tx)
 	stock, err := SaveStock(tx, collector)
 	if err != nil {
-		panic(fmt.Sprintf("Error to save data for stock. Error: %s", err))
+		c.JSON(http.StatusInternalServerError,
+			gin.H{"error": true, "message": fmt.Sprintf("Error to save data for stock. Error: %s", err)})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"success": true, "stock": stock})
 }
 
 //SaveStock save data for stock
-func SaveStock(tx *sql.Tx, collector models.Stock) (models.Stock, error) {
+func SaveStock(tx *sql.Tx, collector models.Stock) (*models.Stock, error) {
 	query := `insert into stock (sell, rate, buy, ticker, account, username, time)
         values ($1, $2, $3, $4, $5, $6, $7) RETURNING id`
 
@@ -58,10 +64,10 @@ func SaveStock(tx *sql.Tx, collector models.Stock) (models.Stock, error) {
 	err := tx.QueryRow(query, collector.Sell, collector.Rate, collector.Buy, collector.Ticker,
 		collector.Account, collector.User, collector.Time).Scan(&stockID)
 	if err != nil {
-		return models.Stock{}, err
+		return nil, err
 	}
 
-	stock := models.Stock{stockID, collector.Sell, collector.Rate, collector.Buy, collector.Ticker,
+	stock := &models.Stock{stockID, collector.Sell, collector.Rate, collector.Buy, collector.Ticker,
 		collector.Account, collector.User, collector.Time}
 
 	return stock, nil
